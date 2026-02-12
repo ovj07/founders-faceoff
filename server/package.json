@@ -1,12 +1,11 @@
 {
-  "name": "founders-faceoff",
-  "private": true,
-  "scripts": {
-    "server": "cd server && node index.js",
-    "client": "cd client && npm run dev",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+  "name": "faceoff-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5"
   }
 }
