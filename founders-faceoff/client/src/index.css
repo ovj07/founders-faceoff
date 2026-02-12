@@ -5,7 +5,6 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,19 +21,39 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+/* ---------- BODY BACKGROUND (FINAL VERSION) ---------- */
+body{
+  margin:0;
+  display:flex;
+  place-items:center;
+  min-width:320px;
+  min-height:100vh;
+  font-family: system-ui, sans-serif;
+
+  background:
+    radial-gradient(circle at 70% 30%, #ff7bd5, transparent 40%),
+    radial-gradient(circle at 30% 40%, #6b6bff, transparent 45%),
+    radial-gradient(circle at 60% 80%, #3a8dff, transparent 50%),
+    #0b0126;
+
+  background-size:200% 200%;
+  animation:gradientMove 18s ease infinite;
 }
 
+/* ---------- ANIMATION ---------- */
+@keyframes gradientMove{
+  0%{ background-position:0% 50%; }
+  50%{ background-position:100% 50%; }
+  100%{ background-position:0% 50%; }
+}
+
+/* ---------- HEADINGS ---------- */
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
 
+/* ---------- BUTTON ---------- */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -44,25 +63,95 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s ease;
 }
+
 button:hover {
   border-color: #646cff;
+  transform: translateY(-2px);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* ---------- LIGHT MODE ---------- */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
+}
+input::placeholder{
+  color:#bbb;
+}
+button:hover{
+  transform:scale(1.03);
+}
+.game-container{
+  padding:40px;
+  color:white;
+}
+
+.inputs{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:20px 0;
+}
+
+input{
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  background:#111;
+  color:white;
+}
+
+.submit-btn{
+  padding:12px 25px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(45deg,#7b2ff7,#f107a3);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.submit-btn:hover{
+  transform:scale(1.05);
+}
+
+.player{
+  display:flex;
+  justify-content:space-between;
+  padding:12px;
+  border-bottom:1px solid #444;
+}
+
+.crisis{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:red;
+  padding:15px 30px;
+  border-radius:10px;
+  font-weight:bold;
+  z-index:999;
+  animation:pop 0.4s ease;
+}
+
+@keyframes pop{
+  from{transform:translate(-50%,-40px); opacity:0;}
+  to{transform:translate(-50%,0); opacity:1;}
 }

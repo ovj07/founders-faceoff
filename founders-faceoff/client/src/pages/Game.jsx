@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import socket from "../socket";
 
-function Game({ room }) {
+function Game({ room, setScreen, setFinalBoard }) {
   const [product, setProduct] = useState(0);
   const [marketing, setMarketing] = useState(0);
   const [hiring, setHiring] = useState(0);
@@ -11,7 +11,6 @@ function Game({ room }) {
   const [board, setBoard] = useState([]);
   const [crisis, setCrisis] = useState(null);
   const [round, setRound] = useState(1);
-  const [gameOver, setGameOver] = useState(null);
 
   useEffect(() => {
     socket.on("leaderboard_update", (players) => {
@@ -28,7 +27,8 @@ function Game({ room }) {
     });
 
     socket.on("game_over", (data) => {
-      setGameOver(data);
+      setFinalBoard(data.players);
+      setScreen("result");
     });
 
     return () => {
@@ -42,60 +42,18 @@ function Game({ room }) {
   const submit = () => {
     socket.emit("submit_strategy", {
       roomId: room.roomId,
-      allocation: {
-        product,
-        marketing,
-        hiring,
-        infra,
-        ai,
-      },
+      allocation: { product, marketing, hiring, infra, ai },
     });
   };
 
-  // 🔹 FINAL WINNER SCREEN
-  if (gameOver) {
-    return (
-      <div style={{ background:"#000", minHeight:"100vh", color:"white", padding:40 }}>
-        <h1>🏆 WINNER</h1>
-        <h2>{gameOver.winner.id}</h2>
-
-        <h3>Final Leaderboard</h3>
-        {gameOver.players.map((p,i)=>(
-          <div key={i}>
-            {p.id} — {p.valuation}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div style={{ background:"#000", minHeight:"100vh", color:"white", padding:40 }}>
-      
-      {/* HEADER */}
-      <h2>Founder’s FaceOff</h2>
-      <h3>Room Code: {room.roomId}</h3>
-      <h3>Round: {round}/5</h3>
+    <div className="game-container">
+      <h2>Room Code: {room.roomId}</h2>
+      <h3>Round {round}/5</h3>
 
-      {/* CRISIS POPUP */}
-      {crisis && (
-        <div style={{
-          position:"fixed",
-          top:20,
-          left:"50%",
-          transform:"translateX(-50%)",
-          background:"red",
-          padding:"15px 30px",
-          borderRadius:10,
-          fontWeight:"bold"
-        }}>
-          🚨 {crisis}
-        </div>
-      )}
+      {crisis && <div className="crisis">🚨 {crisis}</div>}
 
-      <h3>Allocate Budget</h3>
-
-      <div style={{ display:"flex", gap:10 }}>
+      <div className="inputs">
         <input type="number" placeholder="Product" onChange={(e)=>setProduct(+e.target.value)} />
         <input type="number" placeholder="Marketing" onChange={(e)=>setMarketing(+e.target.value)} />
         <input type="number" placeholder="Hiring" onChange={(e)=>setHiring(+e.target.value)} />
@@ -103,15 +61,15 @@ function Game({ room }) {
         <input type="number" placeholder="AI" onChange={(e)=>setAi(+e.target.value)} />
       </div>
 
-      <br/>
-      <button onClick={submit}>Submit Strategy</button>
-
-      <hr style={{ margin:"40px 0" }} />
+      <button className="submit-btn" onClick={submit}>
+        Submit Strategy
+      </button>
 
       <h3>Leaderboard</h3>
       {board.map((p,i)=>(
-        <div key={i}>
-          {p.id} — {p.valuation}
+        <div className="player" key={i}>
+          <span>{p.id}</span>
+          <span>💰 {p.valuation}</span>
         </div>
       ))}
     </div>
