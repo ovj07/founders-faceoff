@@ -3,106 +3,113 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
-const { generateRoomId } = require("./utils/idGenerator");
-const roomManager = require("./managers/roomManager");
-const gameEngine = require("./engines/gameEngine");
-const crisisEngine = require("./engines/crisisEngine");
-
 const app = express();
 app.use(cors());
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: {
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    methods: ["GET", "POST"],
+  },
 });
 
+const rooms = {};
+const MAX_ROUNDS = 5;
+
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+  console.log("FRONTEND CONNECTED:", socket.id);
 
-  // ---------------------------
   // CREATE ROOM
-  // ---------------------------
   socket.on("create_room", () => {
-    const roomId = generateRoomId();
+    const roomId = Math.random().toString(36).substring(2, 6).toUpperCase();
 
-    roomManager.createRoom(roomId, socket);
+    rooms[roomId] = {
+      roomId,
+      players: [],
+      round: 1,
+    };
+
     socket.join(roomId);
 
-    const room = roomManager.getRoom(roomId);
+    rooms[roomId].players.push({
+      id: socket.id,
+      valuation: 0,
+    });
 
-    io.to(roomId).emit("room_update", room);
-
-    console.log("Room created:", roomId);
+    io.to(roomId).emit("room_update", rooms[roomId]);
   });
 
-  // ---------------------------
   // JOIN ROOM
-  // ---------------------------
   socket.on("join_room", (roomId) => {
-    const room = roomManager.getRoom(roomId);
-
-    if (!room) {
-      console.log("Room not found:", roomId);
-      return;
-    }
-
-    roomManager.addPlayer(roomId, socket);
-    socket.join(roomId);
-
-    io.to(roomId).emit("room_update", room);
-
-    console.log("Player joined room:", roomId);
-  });
-
-  // ---------------------------
-  // SUBMIT STRATEGY
-  // ---------------------------
-  socket.on("submit_strategy", ({ roomId, allocation }) => {
-    const room = roomManager.getRoom(roomId);
+    const room = rooms[roomId];
     if (!room) return;
 
-    // store player's allocation
-    room.allocations[socket.id] = allocation;
+    socket.join(roomId);
 
-    console.log("Strategy received from", socket.id);
+    room.players.push({
+      id: socket.id,
+      valuation: 0,
+    });
 
-    // if all players submitted
-    if (Object.keys(room.allocations).length === room.players.length) {
-      console.log("All players submitted. Calculating round...");
+    io.to(roomId).emit("room_update", room);
+  });
 
-      const crisis = crisisEngine.getRandomCrisis();
+  // SUBMIT STRATEGY
+  socket.on("submit_strategy", ({ roomId, allocation }) => {
+    const room = rooms[roomId];
+    if (!room) return;
 
-      const leaderboard = gameEngine.calculateRound(
-        room,
-        room.allocations,
-        crisis
-      );
+    const player = room.players.find(p => p.id === socket.id);
+    if (!player) return;
 
-      // reset allocations
-      room.allocations = {};
-      room.round++;
+    // SCORING
+    const revenue =
+      allocation.product * 2 +
+      allocation.marketing * 1.5 +
+      allocation.ai * 3;
 
-      // send results
-      io.to(roomId).emit("round_result", {
-        leaderboard,
-        crisis,
-        round: room.round,
+    const risk =
+      allocation.marketing * 0.5 -
+      allocation.infra * 0.3;
+
+    const valuation = Math.max(0, revenue - risk);
+    player.valuation += valuation;
+
+    // LEADERBOARD
+    io.to(roomId).emit("leaderboard_update", room.players);
+
+    // CRISIS
+    const crises = [
+      "AI costs doubled!",
+      "Marketing banned!",
+      "Investor pulled funding!",
+      "Server crash!",
+      "Recession!"
+    ];
+
+    const crisis = crises[Math.floor(Math.random() * crises.length)];
+    io.to(roomId).emit("crisis_event", crisis);
+
+    // 🔥 ROUND UPDATE
+    room.round += 1;
+
+    io.to(roomId).emit("round_update", room.round);
+
+    // GAME OVER
+    if (room.round > MAX_ROUNDS) {
+      const winner = [...room.players].sort((a,b)=>b.valuation-a.valuation)[0];
+
+      io.to(roomId).emit("game_over", {
+        winner,
+        players: room.players
       });
 
-      console.log("Round completed for room", roomId);
-
-      // GAME OVER after 3 rounds
-      if (room.round > 3) {
-        io.to(roomId).emit("game_over", leaderboard);
-        console.log("Game over:", roomId);
-      }
+      return;
     }
   });
 
-  // ---------------------------
-  // DISCONNECT
-  // ---------------------------
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
   });
