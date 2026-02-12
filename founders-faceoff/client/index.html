@@ -1,138 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Founder's FaceOff</title>
+<meta charset="UTF-8">
+<title>Founder's FaceOff</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        html, body {
-            height: 100%;
-        }
-
-       body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #000;   /* Full black background */
-    color: white;             /* Default text color white */
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
 }
 
+html, body{
+    height:100%;
+}
 
-        /* 🔹 Header Animation */
-        header {
-            background-color: #000000;
-            color: white;
-            padding: 15px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: slideDown 1s ease-out;
-        }
+/* ---------- BODY BACKGROUND ---------- */
+body{
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    color:white;
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 16px;
-            transition: 0.3s ease;
-        }
+  background: linear-gradient(-45deg,#ff00cc,#3333ff,#00ffee,#ff00cc);
 
-        nav a:hover {
-            color: #ffd6ff;
-            transform: scale(1.1);
-        }
+    background-size:400% 400%;
+    animation:gradientMove 8s ease infinite;
+}
 
-        /* 🔹 Hero Section */
-        .hero {
-            flex: 1;
-            text-align: center;
-            padding: 120px 20px;
-            animation: fadeUp 1.5s ease forwards;
-        }
+/* ---------- HEADER ---------- */
+header{
+    background:#000;
+    padding:15px 50px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    animation:slideDown 1s ease-out;
+}
 
-        .hero h1 {
-            font-size: 48px;
-            color: #ffffff;
-            margin-bottom: 30px;
-        }
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    font-size:16px;
+    transition:.3s;
+}
 
-        /* 🔹 Button */
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background-color: #000000;
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-        }
+nav a:hover{
+    color:#ffd6ff;
+    transform:scale(1.1);
+}
 
-        .btn:hover {
-            background-color: #000000;
-            transform: translateY(-6px);
-            box-shadow: 0 10px 25px rgba(129, 30, 138, 0.4);
-        }
+/* ---------- HERO ---------- */
+.hero{
+    flex:1;
+    text-align:center;
+    padding:120px 20px;
+    animation:fadeUp 1.5s ease forwards;
+}
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #000000;
-            color: white;
-        }
+.hero h1{
+    font-size:48px;
+    margin-bottom:30px;
+}
 
-        /* 🔥 Animations */
+/* ---------- BUTTON ---------- */
+.btn{
+    display:inline-block;
+    padding:12px 30px;
+    background:#000;
+    color:white;
+    text-decoration:none;
+    border-radius:30px;
+    transition:.3s;
+}
 
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+.btn:hover{
+    transform:translateY(-6px);
+    box-shadow:0 10px 25px rgba(129,30,138,.4);
+}
 
-        @keyframes fadeUp {
-            from {
-                transform: translateY(40px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+/* ---------- FOOTER ---------- */
+footer{
+    text-align:center;
+    padding:20px;
+    background:#000;
+}
 
-    </style>
+/* ---------- ANIMATIONS ---------- */
+
+@keyframes gradientMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+@keyframes slideDown{
+    from{
+        transform:translateY(-100%);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+}
+
+@keyframes fadeUp{
+    from{
+        transform:translateY(40px);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <h2>Founder's FaceOff</h2>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Projects</a>
-            <a href="#">Contact</a>
-        </nav>
-    </header>
+<header>
+    <h2>Founder's FaceOff</h2>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Projects</a>
+        <a href="#">Contact</a>
+    </nav>
+</header>
 
-    <section class="hero">
-        <h1>Welcome to Founder's FaceOff</h1>
-        <a href="#" class="btn">Get Started</a>
-    </section>
+<section class="hero">
+    <h1>Welcome to Founder's FaceOff</h1>
+    <a href="#" class="btn">Get Started</a>
+</section>
 
-    <footer>
-        © 2026 Founder's FaceOff. All rights reserved.
-    </footer>
+<footer>
+    © 2026 Founder's FaceOff. All rights reserved.
+</footer>
 
 </body>
 </html>

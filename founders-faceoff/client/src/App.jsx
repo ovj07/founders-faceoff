@@ -8,25 +8,24 @@ function App() {
   const [room, setRoom] = useState(null);
   const [finalBoard, setFinalBoard] = useState(null);
 
-  if (screen === "game") {
-    return (
-      <Game
-        room={room}
-        setScreen={setScreen}
-        setFinalBoard={setFinalBoard}
-      />
-    );
-  }
-
-  if (screen === "result") {
-    return <Result board={finalBoard} />;
-  }
-
   return (
-    <Lobby
-      setRoom={setRoom}
-      setScreen={setScreen}
-    />
+    <>
+      {screen === "lobby" && (
+        <Lobby setRoom={setRoom} setScreen={setScreen} />
+      )}
+
+      {screen === "game" && (
+        <Game
+          room={room}
+          setScreen={setScreen}
+          setFinalBoard={setFinalBoard}
+        />
+      )}
+
+      {screen === "result" && (
+        <Result board={finalBoard} />
+      )}
+    </>
   );
 }
 
