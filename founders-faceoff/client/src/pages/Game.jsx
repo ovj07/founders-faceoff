@@ -1,3 +1,6 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 import { useState, useEffect } from "react";
 import socket from "../socket";
 
@@ -47,32 +50,53 @@ function Game({ room, setScreen, setFinalBoard }) {
   };
 
   return (
-    <div className="game-container">
-      <h2>Room Code: {room.roomId}</h2>
-      <h3>Round {round}/5</h3>
+    <>
+      <Header />
 
-      {crisis && <div className="crisis">🚨 {crisis}</div>}
+      <div className="game-container">
 
-      <div className="inputs">
-        <input type="number" placeholder="Product" onChange={(e)=>setProduct(+e.target.value)} />
-        <input type="number" placeholder="Marketing" onChange={(e)=>setMarketing(+e.target.value)} />
-        <input type="number" placeholder="Hiring" onChange={(e)=>setHiring(+e.target.value)} />
-        <input type="number" placeholder="Infra" onChange={(e)=>setInfra(+e.target.value)} />
-        <input type="number" placeholder="AI" onChange={(e)=>setAi(+e.target.value)} />
+        {/* ⭐ GOLDEN FLOATING DOTS */}
+        <div className="sparkle-bg">
+          {[...Array(30)].map((_, i) => (
+            <span
+              key={i}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 6}s`
+              }}
+            ></span>
+          ))}
+        </div>
+
+        <h2>Room Code: {room.roomId}</h2>
+        <h3>Round {round}/5</h3>
+
+        {crisis && <div className="crisis">🚨 {crisis}</div>}
+
+        <div className="inputs">
+          <input type="number" placeholder="Product" onChange={(e)=>setProduct(+e.target.value)} />
+          <input type="number" placeholder="Marketing" onChange={(e)=>setMarketing(+e.target.value)} />
+          <input type="number" placeholder="Hiring" onChange={(e)=>setHiring(+e.target.value)} />
+          <input type="number" placeholder="Infra" onChange={(e)=>setInfra(+e.target.value)} />
+          <input type="number" placeholder="AI" onChange={(e)=>setAi(+e.target.value)} />
+        </div>
+
+        <button className="submit-btn" onClick={submit}>
+          Submit Strategy
+        </button>
+
+        <h3>Leaderboard</h3>
+        {board.map((p,i)=>(
+          <div className="player" key={i}>
+            <span>{p.id}</span>
+            <span>💰 {p.valuation}</span>
+          </div>
+        ))}
       </div>
 
-      <button className="submit-btn" onClick={submit}>
-        Submit Strategy
-      </button>
-
-      <h3>Leaderboard</h3>
-      {board.map((p,i)=>(
-        <div className="player" key={i}>
-          <span>{p.id}</span>
-          <span>💰 {p.valuation}</span>
-        </div>
-      ))}
-    </div>
+      <Footer />
+    </>
   );
 }
 

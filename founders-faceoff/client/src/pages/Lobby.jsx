@@ -23,14 +23,36 @@ function Lobby({ setRoom, setScreen }) {
 
   return (
     <>
-      <header>
-        <h2>Founder's FaceOff</h2>
-        <nav>
-          <a>Home</a>
-          <a>About</a>
-          <a>Projects</a>
-          <a>Contact</a>
-        </nav>
+      {/* ✨ Sparkle Background */}
+      <div className="sparkle-bg">
+        {Array.from({ length: 25 }).map((_, i) => (
+          <span
+            key={i}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 6}s`,
+            }}
+          ></span>
+        ))}
+      </div>
+
+      <header className="navbar">
+        <div className="navbar-inner">
+          <div
+            className="nav-logo"
+            onClick={() => setScreen("lobby")}
+            style={{ cursor: "pointer" }}
+          >
+            Founder's FaceOff
+          </div>
+
+          <nav className="nav-links">
+            <a>About</a>
+            <a>Projects</a>
+            <a>Contact</a>
+          </nav>
+        </div>
       </header>
 
       <section className="hero">
@@ -45,7 +67,7 @@ function Lobby({ setRoom, setScreen }) {
         <input
           placeholder="Enter Room Code"
           value={roomCode}
-          onChange={(e)=>setRoomCode(e.target.value)}
+          onChange={(e) => setRoomCode(e.target.value)}
         />
 
         <button className="btn" onClick={joinRoom}>
@@ -53,8 +75,8 @@ function Lobby({ setRoom, setScreen }) {
         </button>
       </section>
 
-      <footer>
-        © 2026 Founder's FaceOff
+      <footer className="footer">
+        © 2026 Founder’s FaceOff
       </footer>
     </>
   );
